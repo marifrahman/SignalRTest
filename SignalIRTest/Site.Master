@@ -1,0 +1,104 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="SignalIRTest.SiteMaster" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head runat="server">
+    <title></title>
+    <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .adminmsg
+        {
+            background-color: Red;
+            font-weight: bold;
+            height: 20px;
+            text-align: center;
+            display: none;
+            text-decoration: none;
+            color: White;
+        }
+    </style>
+
+    <script src='<%= Page.ResolveUrl("~/Scripts/jquery-1.6.4.min.js") %>' type="text/javascript"></script>
+    <script src='<%= Page.ResolveUrl("~/Scripts/jquery.signalR-1.1.4.min.js") %>' type="text/javascript"></script>
+    <script src='<%= Page.ResolveUrl("~/signalr/hubs") %>' type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        $(function () {
+            // Declare a proxy to reference the hub. 
+            var notifications = $.connection.notificationsHub;
+            // Create a function that the hub can call to broadcast messages.
+            notifications.client.broadcastNotification = function (name, message, color) {
+                $("#adminmsg").text("This is " + name + "; " + message);
+                if (color == 'none')
+                    $("#adminmsg").hide();
+                else {
+                    $("#adminmsg").show();
+                    $("#adminmsg").css('background', color);
+                }
+                
+                // Html encode display name and message. 
+                //var encodedName = $('<div />').text(name).html();
+                //var encodedMsg = $('<div />').text(message).html();
+                // Add the message to the page. 
+                //$('#discussion').append('<li><strong>' + encodedName
+                //    + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+            };
+
+
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+
+            });
+        });
+    </script>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <div id="adminmsg" class="adminmsg">
+        Just a Test div</div>
+    <form runat="server">
+    <div class="page">
+        <div class="header">
+            <div class="title">
+                <h1>
+                    SigNalIR test Push Message app
+                </h1>
+            </div>
+            <div class="loginDisplay">
+                <asp:LoginView ID="HeadLoginView" runat="server" EnableViewState="false">
+                    <AnonymousTemplate>
+                        [ <a href="~/Account/Login.aspx" id="HeadLoginStatus" runat="server">Log In</a>
+                        ]
+                    </AnonymousTemplate>
+                    <LoggedInTemplate>
+                        Welcome <span class="bold">
+                            <asp:LoginName ID="HeadLoginName" runat="server" />
+                        </span>! [
+                        <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out"
+                            LogoutPageUrl="~/" />
+                        ]
+                    </LoggedInTemplate>
+                </asp:LoginView>
+            </div>
+            <div class="clear hideSkiplink">
+                <asp:Menu ID="NavigationMenu" runat="server" CssClass="menu" EnableViewState="false"
+                    IncludeStyleBlock="false" Orientation="Horizontal">
+                    <Items>
+                        <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Home" />
+                        <asp:MenuItem NavigateUrl="~/About.aspx" Text="About" />
+                    </Items>
+                </asp:Menu>
+            </div>
+        </div>
+        <div class="main">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="footer">
+    </div>
+    </form>
+</body>
+</html>
