@@ -1,7 +1,7 @@
-SignalIRTest
+SignalRTest
 ============
 
-This is a Test Asp.Net webform application to Test Real time Push Notification with SignalIR; 
+This is a Test Asp.Net webform application to Test Real time Push Notification with SignalR; 
 
 
 Have got another good solution for it 
